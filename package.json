@@ -1,10 +1,10 @@
 {
   "name": "bono",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Bono javascript web framework on top of node.js",
   "main": "lib/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test"
   },
   "author": "Ganesha <reekoheek@gmail.com>",
   "license": "MIT",
@@ -21,5 +21,9 @@
     "gulp": "^3.9.1",
     "gulp-istanbul": "^0.10.3",
     "gulp-mocha": "^2.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/xinix-technology/node-bono.git"
   }
 }
