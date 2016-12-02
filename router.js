@@ -42,7 +42,7 @@ Router.prototype._routeRegExp = function(str) {
 
   assert(chunks.length <= 2, 'Invalid use of optional params');
 
-  var matches = chunks[0].match(/{[^}]+}/);
+  // var matches = chunks[0].match(/{[^}]+}/);
   var tokens = [];
   var re = chunks[0].replace(/{([^}]+)}/g, function(g, token) {
     tokens.push(token);
@@ -60,31 +60,27 @@ Router.prototype._routeRegExp = function(str) {
 };
 
 Router.prototype.route = function(route) {
-  _.forEach(route.methods, function(method) {
-    var pattern, args = [], type;
-    if (typeof route.pattern === 'string') {
-      if (this._isStatic(route.pattern)) {
-        type = 's';
-        pattern = route.pattern;
+  _.forEach(route.methods || [ route.method || 'GET' ], function(method) {
+    var single = _.clone(route);
+    single.pattern = single.pattern || single.uri;
+    single.method = method;
+    if (typeof single.pattern === 'string') {
+      if (this._isStatic(single.pattern)) {
+        single.type = 's';
+        single.args = [];
       } else {
-        type = 'v';
-        var result = this._routeRegExp(route.pattern);
-        pattern = result[0];
-        args = result[1];
+        single.type = 'v';
+        var result = this._routeRegExp(single.pattern);
+        single.pattern = result[0];
+        single.args = result[1];
       }
-    } else if (route.pattern instanceof RegExp) {
-      type = 'v';
-      pattern = route.pattern;
-      args = route.args || [];
+    } else if (single.pattern instanceof RegExp) {
+      single.type = 'v';
+      single.args = single.args || [];
     } else {
-      throw new Error('Unimplemented pattern for route: ' + (typeof route.pattern));
+      throw new Error('Unimplemented pattern for route: ' + (typeof single.pattern));
     }
-    this.routes[method.toUpperCase()].push({
-      type: type,
-      pattern: pattern,
-      args: args,
-      handler: route.handler,
-    });
+    this.routes[method.toUpperCase()].push(single);
   }.bind(this));
 
   return this;
@@ -127,6 +123,7 @@ Router.prototype.dispatch = function(method, path) {
 
   if (route) {
     return {
+      route: route,
       handler: route.handler,
       attributes: attributes,
       matches: matches,

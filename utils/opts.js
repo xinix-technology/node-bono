@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const path = require('path');
+const fs = require('fs');
 
 module.exports = Opts;
 
@@ -27,13 +28,23 @@ Opts.prototype.mergeFile = function(file) {
   var parsed = path.parse(file);
   var envFile = path.join(parsed.dir, parsed.name + '-' + this.env + parsed.ext);
 
-  try {
-    this.merge(require(file));
-  } catch(e) {}
+  if (fs.existsSync(file)) {
+    try {
+      this.merge(require(file));
+    } catch(e) {
+      console.error('Something happen on options file: ' + file);
+      console.error(e.stack);
+    }
+  }
 
-  try {
-    this.merge(require(envFile));
-  } catch(e) {}
+  if (fs.existsSync(envFile)) {
+    try {
+      this.merge(require(envFile));
+    } catch(e) {
+      console.error('Something happen on options file: ' + envFile);
+      console.error(e.stack);
+    }
+  }
 
   return this;
 };

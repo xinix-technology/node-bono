@@ -1,6 +1,6 @@
 'use strict';
 
-const koa = require('koa');
+const Koa = require('koa');
 const _ = require('lodash');
 const wrapper = require('./middlewares/wrapper');
 const path = require('path');
@@ -20,10 +20,6 @@ const routeMethods = {
 module.exports = Bundle;
 
 function Bundle(options) {
-  if (!(this instanceof Bundle)) {
-    return new Bundle(options);
-  }
-
   this.options = {};
   this.bundles = [];
   this.middlewares = [];
@@ -56,9 +52,9 @@ function Bundle(options) {
   }
 }
 
-Bundle.prototype = koa();
+Bundle.prototype = new Koa();
 
-var originalCreateContext = Bundle.prototype.createContext;
+const originalCreateContext = Bundle.prototype.createContext;
 Bundle.prototype.createContext = function(req, res){
   var context = originalCreateContext.apply(this, arguments);
 
@@ -89,10 +85,48 @@ Bundle.prototype.createContext = function(req, res){
         this.request.extension = extension;
       }
     },
+    parsedBody: {
+      get() {
+        return this.request.parsedBody;
+      },
+      set(parsedBody) {
+        this.request.parsedBody = parsedBody;
+      }
+    },
     attributes: {
       get() {
         return this.request.attributes;
       },
+    },
+
+    attr: {
+      writable: false,
+      enumerable: false,
+      configurable: false,
+      value: function (key, value) {
+        switch(arguments.length) {
+          case 0:
+            return this.attributes;
+          case 1:
+            return this.attributes[key] || undefined;
+          default:
+            this.attributes[key] = value;
+            break;
+        }
+      }
+    },
+
+    depends: {
+      writable: false,
+      enumerable: false,
+      configurable: false,
+      value: function () {
+        var attributes = this.attributes;
+        var foundMissing = _.find(arguments, arg => !attributes[arg]);
+        if (foundMissing) {
+          throw new Error(`Unregistered dependency ${foundMissing} middleware!`);
+        }
+      }
     }
   });
 
@@ -149,8 +183,13 @@ _.forEach(routeMethods, function(methods, name) {
 Bundle.prototype.routeMap = function(route) {
   assert.equal(typeof route, 'object', 'Invalid argument, route { object }');
 
-  route.pattern = route.uri;
-  // this.routes.push(route);
+  if ('string' === typeof route.handler) {
+    if ('function' !== typeof this[route.handler]) {
+      throw new Error(`Method ${route.handler} is undefined!`);
+    }
+    route.handler = this[route.handler].bind(this);
+  }
+
   this.router.route(route);
 
   return this;

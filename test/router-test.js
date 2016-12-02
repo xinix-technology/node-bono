@@ -1,5 +1,5 @@
 const assert = require('assert');
-const router = require('../lib/router');
+const router = require('../router');
 
 describe('Router', function() {
   'use strict';
