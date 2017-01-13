@@ -40,23 +40,6 @@ But your application does not have any route defined yet. You have to define rou
 
 You might want to configure your application, to define routes, bundles, and/or middlewares. Bono will automatically read file `config/config.js` as its configuration.
 
-This is example of how `config/config.js` looks like:
-
-```js
-'use strict';
-
-module.exports = {
-  routes: [
-    {
-      uri: '/',
-      handler: function() {
-        this.body = 'Hello world!';
-      }
-    }
-  ]
-};
-```
-
 The configuration states that your application will have one route to handle uri `/`, and it will show for you message `Hello world!`.
 
 
