@@ -2,7 +2,7 @@
   "name": "bono",
   "version": "0.3.0",
   "description": "Bono javascript web framework on top of node.js",
-  "main": "lib/bundle.js",
+  "main": "bundle.js",
   "scripts": {
     "start": "nodemon --harmony-async-await ./index.js"
   },
