@@ -18,12 +18,13 @@ class Route {
   }
 
   async dispatch (ctx) {
+    ctx.status = 200;
+
     const result = await this.callback(ctx);
     if (result === undefined) {
       return;
     }
 
-    ctx.status = ctx.status === 404 ? 200 : ctx.status;
     ctx.state.result = result;
   }
 }
