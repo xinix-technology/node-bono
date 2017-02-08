@@ -2,6 +2,7 @@ const Koa = require('koa');
 const Router = require('./router');
 const Bundler = require('./bundler');
 const compose = require('koa-compose');
+const parse = require('co-body');
 
 class Bundle extends Koa {
   constructor () {
@@ -9,6 +10,28 @@ class Bundle extends Koa {
 
     this.router = new Router();
     this.bundler = new Bundler();
+  }
+
+  createContext (req, res) {
+    let ctx = super.createContext(req, res);
+
+    Object.assign(ctx, {
+      parse (type) {
+        if ('_parsedBody' in this.request === false) {
+          if (!type) {
+            this.request._parsedBody = parse(this);
+          } else if (!parse[type]) {
+            throw new Error(`Parser ${type} not found`);
+          } else {
+            this.request._parsedBody = parse[type](this);
+          }
+        }
+
+        return this.request._parsedBody;
+      },
+    });
+
+    return ctx;
   }
 
   bundle (uri, bundle) {

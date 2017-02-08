@@ -9,6 +9,7 @@
   "author": "Ganesha <reekoheek@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "co-body": "^4.2.0",
     "koa": "next",
     "koa-compose": "^3.0.0"
   },
