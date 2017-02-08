@@ -45,14 +45,14 @@ class Bundle extends Koa {
   }
 
   async dispatch (uri, ctx) {
-    const originalUrl = ctx.url;
-    ctx.url = ctx.url.substr(uri.length) || '/';
+    const originalPath = ctx.path;
+    ctx.path = ctx.path.substr(uri.length) || '/';
 
     const downstream = this.finalize();
 
     await downstream(ctx);
 
-    ctx.url = originalUrl;
+    ctx.path = originalPath;
   }
 
   callback () {

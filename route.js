@@ -34,11 +34,11 @@ class Route {
 
   match (ctx) {
     if (this.isStatic) {
-      if (ctx.url === this.uri) {
+      if (ctx.path === this.uri) {
         return true;
       }
     } else {
-      const result = ctx.url.match(this.pattern);
+      const result = ctx.path.match(this.pattern);
       if (result) {
         ctx.parameters = this.args.reduce((args, name, index) => {
           args[name] = result[index + 1];

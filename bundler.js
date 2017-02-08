@@ -8,7 +8,7 @@ class Bundler {
   }
 
   match (ctx) {
-    return this.data.find(b => ctx.url.indexOf(b.uri) !== -1);
+    return this.data.find(b => ctx.path.indexOf(b.uri) !== -1);
   }
 
   async delegate (ctx) {
