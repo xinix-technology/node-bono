@@ -1,50 +1,212 @@
 # Bono (node-bono)
 
-At [Xinix Technology](http://sagara.id), we have our own PHP framework called [Bono](https://github.com/xinix-technology/bono) that we use everyday. This Node.js library adopting the same principal as the PHP flavor.
+```sh
+npm install xinix-technology/node-bono#next --save
+```
 
-## How to Use
+Bono is light and modular Node.js web application framework (based on Koa.js) to develop api and website.
 
-Initialize your new web application project and install bono as dependency using npm.
+## Getting Started
 
-```bash
+Assuming you already installed Node.js, create directory to hold your application.
+Move to that directory and start initialize npm project on that directory.
+Install bono as dependency.
+
+```sh
 mkdir my-project
 cd my-project
 npm init
-npm install bono --save
+npm install xinix-technology/node-bono#next --save
 ```
 
 Write code below as `app.js`
 
-```js
-'use strict';
-
+```javascript
 const http = require('http');
-const bono = require('bono');
+const Bundle = require('bono');
 
-var app = bono();
+var app = new Bundle();
+
+app.get('/', ctx => 'Hello world!');
+
 var server = http.Server(app.callback());
 server.listen(3000, () => console.log('Listening on port 3000'));
 ```
 
 Then run with node, or you might want to use [nodemon](https://www.npmjs.com/package/nodemon) on development.
 
-```bash
+```sh
 node app.js
 ```
 
-Now your application is alive on port 3000, you can access http://localhost:3000 from your local machine. 
+Now your application is alive on port 3000, you can access http://localhost:3000 from your local machine.
 
-But your application does not have any route defined yet. You have to define routes, bundles, and/or middlewares.
+Right now your application only define single route. You will learn how to use bundles, middlewares, and routes below.
 
-## Configuration
+## Bundle
 
-You might want to configure your application, to define routes, bundles, and/or middlewares. Bono will automatically read file `config/config.js` as its configuration.
+Bono Bundle is a single module context which have middlewares, routes, and sub bundles. The application itself is a bundle.
 
-The configuration states that your application will have one route to handle uri `/`, and it will show for you message `Hello world!`.
+Bundle is mechanism to separate concern of modules. You can create an application bundle that delegates dissect each of every request context to separate sub bundles.
 
+You can hook any bundle as sub bundles of bigger application, it means programmers can distribute common bundles to be used by another kind of applications, and reuse bundles that you had written for previous project as sub bundles of current project.
 
-## Routes, Bundles, and Middlewares
+Bundles basically are Koa.js applications, so every method and property that Koa.js applications have, you can use them in bundles.
 
-There are some concepts to learn about Bono. We might back again later to explain them for you.
+```javascript
+const http = require('http');
+const Bundle = require('bono');
 
-Have a nice coding!
+const auth = new Bundle();
+app.post('/login', async ctx => {
+  let { username, password } = await ctx.parse();
+
+  ctx.assert(username === 'foo' && password === 'bar', 401, 'Login failed!');
+});
+
+const app = new Bundle();
+app.get('/', ctx => ctx.redirect('/auth/login'));
+app.bundle('/auth', auth);
+
+var server = http.Server(app.callback());
+server.listen(3000, () => console.log('Listening on port 3000'));
+```
+
+### Extend Bundle
+
+You can prepare generic bundle to reuse in your projects. This bundle can be packaged into separate package also.
+
+Write codes below in `auth.js` file.
+
+```javascript
+const Bundle = require('bono');
+
+class AuthBundle extends Bundle {
+  constructor () {
+    super();
+
+    this.post('/login', async ctx => {
+      let { username, password } = await ctx.parse();
+
+      ctx.assert(username === 'foo' && password === 'bar', 401, 'Login failed!');
+
+      // append server side data
+
+      return 'login success';
+    });
+
+    this.get('/logout', ctx => {
+      // remove server side data
+
+      return 'logout success';
+    });
+  }
+}
+```
+
+Then use the bundle in application.
+
+```javascript
+const http = require('http');
+const Bundle = require('bono');
+const AuthBundle = require('./auth');
+
+const app = new Bundle();
+
+app.bundle(new AuthBundle());
+
+var server = http.Server(app.callback());
+server.listen(3000, () => console.log('Listening on port 3000'));
+```
+
+## Middlewares
+
+Bono middlewares basically is pure Koa.js middlewares.
+
+Middleware cascade in a more traditional way as you may be used to with similar tools - this was previously difficult to make user friendly with node's use of callbacks. However with generators we can achieve "true" middleware. Contrasting Connect's implementation which simply passes control through series of functions until one returns, Koa yields "downstream", then control flows back "upstream".
+
+Middleware definition takes the following structure:
+
+```
+bundle.use(MIDDLEWARE)
+```
+
+Where:
+
+bundle is an instance of Bono bundle and MIDDLEWARE is a function with arguments as Koa.js request context and next middleware function. MIDDLEWARE can be async function.
+
+```javascript
+const http = require('http');
+const Bundle = require('bono');
+
+const app = new Bundle();
+
+app.use(async (ctx, next) => {
+  console.log('before route');
+
+  await next();
+
+  console.log('after route');
+});
+
+app.get('/', ctx => {
+  console.log('route running');
+  return 'Hello world!';
+});
+
+var server = http.Server(app.callback());
+server.listen(3000, () => console.log('Listening on port 3000'));
+```
+
+Run server and go to URL http://localhost:3000/ and you will see `Hello world!`. In server logs, you can see,
+
+```sh
+$ node app.js
+Listening on port 3000
+before route
+route running
+after route
+```
+
+### Built-in Middlewares
+
+Bono provides programmmers built-in middlewares as follows:
+
+#### JSON Middleware
+
+```javascript
+bundle.use(require('bono/middlewares/json')());
+```
+
+#### Logger Middleware
+
+```javascript
+bundle.use(require('bono/middlewares/logger')());
+```
+
+#### Not Found Middleware
+
+```javascript
+bundle.use(require('bono/middlewares/not-found')('404 Not Found'));
+```
+
+## Routes
+
+Routing refers to determining how an application responds to a client request to a particular endpoint, which is a URI (or path) and a specific HTTP request method (GET, POST, and so on).
+
+Each route can have one or more handler functions, which are executed when the route is matched.
+
+Route definition takes the following structure:
+
+```
+bundle.METHOD(PATH, HANDLER)
+```
+
+Where:
+
+bundle is an instance of Bono bundle.
+- METHOD is an HTTP request method, in lowercase.
+- PATH is a path on the server.
+- HANDLER is the function executed when the route is matched.
+
+HANDLER accepts Koa.js request context as argument. HANDLER can be async function.
