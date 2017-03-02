@@ -16,18 +16,27 @@ class Bundle extends Koa {
     let ctx = super.createContext(req, res);
 
     Object.assign(ctx, {
-      parse (type) {
-        if ('_parsedBody' in this.request === false) {
-          if (!type) {
-            this.request._parsedBody = parse(this);
-          } else if (!parse[type]) {
-            throw new Error(`Parser ${type} not found`);
-          } else {
-            this.request._parsedBody = parse[type](this);
+      async parse (type) {
+        if ('_parsedBody' in this.request) {
+          return this.request._parsedBody;
+        } else if ('_parsedError' in this.request) {
+          throw this.request._parsedError;
+        } else {
+          try {
+            if (!type) {
+              this.request._parsedBody = await parse(this);
+            } else if (!parse[type]) {
+              throw new Error(`Parser ${type} not found`);
+            } else {
+              this.request._parsedBody = await parse[type](this);
+            }
+            return this.request._parsedBody;
+          } catch (err) {
+            err.status = err.status || 400;
+            this.request._parsedError = err;
+            throw err;
           }
         }
-
-        return this.request._parsedBody;
       },
     });
 
@@ -48,6 +57,10 @@ class Bundle extends Koa {
 
   put (uri, callback) {
     this.route(['PUT'], uri, callback);
+  }
+
+  patch (uri, callback) {
+    this.route(['PATCH'], uri, callback);
   }
 
   delete (uri, callback) {

@@ -6,6 +6,7 @@ class Router {
       GET: [],
       POST: [],
       PUT: [],
+      PATCH: [],
       DELETE: [],
     };
   }
