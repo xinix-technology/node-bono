@@ -210,3 +210,10 @@ bundle is an instance of Bono bundle.
 - HANDLER is the function executed when the route is matched.
 
 HANDLER accepts Koa.js request context as argument. HANDLER can be async function.
+
+## Context
+
+Bono context is Koa.js context with addition in API as follows:
+
+- ctx.parse() - async method to parse request body
+- ctx.parameters - object contains parameters from url
