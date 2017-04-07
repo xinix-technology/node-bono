@@ -16,6 +16,7 @@ class Bundle extends Koa {
     let ctx = super.createContext(req, res);
 
     Object.assign(ctx, {
+      parameters: {},
       async parse (type) {
         if ('_parsedBody' in this.request) {
           return this.request._parsedBody;
@@ -80,9 +81,10 @@ class Bundle extends Koa {
     return this._downstream;
   }
 
-  async dispatch (uri, ctx) {
+  async dispatch (matcher, ctx) {
     const originalPath = ctx.path;
-    ctx.path = ctx.path.substr(uri.length) || '/';
+
+    ctx.path = matcher.shiftPath(ctx);
 
     const downstream = this.finalize();
 
