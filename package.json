@@ -1,6 +1,6 @@
 {
   "name": "bono",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Bono javascript web framework on top of node.js",
   "main": "bundle.js",
   "scripts": {
