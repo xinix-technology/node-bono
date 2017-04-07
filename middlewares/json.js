@@ -12,8 +12,8 @@ module.exports = ({ debug = false } = {}) => {
       await next();
 
       if (ctx.status >= 400) {
-        let status = ctx.status;
-        ctx.body = ctx.body || { errors: [ { message: ctx.response.statusMessage } ] };
+        let { status, message } = ctx;
+        ctx.body = ctx.body || { errors: [ { message } ] };
         ctx.status = status;
       } else if (ctx.state.result) {
         ctx.body = ctx.state.result;
