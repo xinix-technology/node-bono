@@ -88,7 +88,6 @@ class Route {
     if (result === undefined) {
       return;
     }
-
     ctx.state.result = result;
   }
 }

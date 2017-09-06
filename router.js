@@ -29,13 +29,13 @@ class Router {
     return routes.find(route => route.match(ctx));
   }
 
-  async delegate (ctx) {
+  delegate (ctx) {
     const route = this.match(ctx);
     if (!route) {
       return;
     }
 
-    return await route.dispatch(ctx);
+    return route.dispatch(ctx);
   }
 }
 

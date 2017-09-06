@@ -52,7 +52,7 @@ class BundlerMatcher {
 
   shiftPath (ctx) {
     if (this.isStatic) {
-      return ctx.path.substr(this.uri.length) || '/';
+      return this.uri === '/' ? ctx.path : ctx.path.substr(this.uri.length) || '/';
     }
 
     let matches = ctx.path.match(this.pattern);
