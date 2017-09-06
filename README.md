@@ -16,7 +16,7 @@ Install bono as dependency.
 mkdir my-project
 cd my-project
 npm init
-npm install xinix-technology/node-bono#next --save
+npm install bono --save
 ```
 
 Write code below as `app.js`
@@ -25,11 +25,11 @@ Write code below as `app.js`
 const http = require('http');
 const Bundle = require('bono');
 
-var app = new Bundle();
+let app = new Bundle();
 
 app.get('/', ctx => 'Hello world!');
 
-var server = http.Server(app.callback());
+let server = http.Server(app.callback());
 server.listen(3000, () => console.log('Listening on port 3000'));
 ```
 
@@ -68,7 +68,7 @@ const app = new Bundle();
 app.get('/', ctx => ctx.redirect('/auth/login'));
 app.bundle('/auth', auth);
 
-var server = http.Server(app.callback());
+let server = http.Server(app.callback());
 server.listen(3000, () => console.log('Listening on port 3000'));
 ```
 
@@ -115,7 +115,7 @@ const app = new Bundle();
 
 app.bundle(new AuthBundle());
 
-var server = http.Server(app.callback());
+let server = http.Server(app.callback());
 server.listen(3000, () => console.log('Listening on port 3000'));
 ```
 
@@ -154,7 +154,7 @@ app.get('/', ctx => {
   return 'Hello world!';
 });
 
-var server = http.Server(app.callback());
+let server = http.Server(app.callback());
 server.listen(3000, () => console.log('Listening on port 3000'));
 ```
 
