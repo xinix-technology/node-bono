@@ -59,7 +59,7 @@ class Route {
       return params;
     }, args.reduce((params, name, index) => {
       if (name) {
-        params[name] = result[index + 1];
+        params[name] = decodeURIComponent(result[index + 1]);
       }
       return params;
     }, {}));
