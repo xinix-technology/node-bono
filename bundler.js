@@ -38,7 +38,8 @@ class BundlerMatcher {
 
   match (ctx) {
     if (this.isStatic) {
-      return ctx.path.indexOf(this.uri) !== -1;
+      let uri = this.uri === '/' ? '/' : this.uri + '/';
+      return ctx.path === this.uri || ctx.path.startsWith(uri);
     }
 
     let result = ctx.path.match(this.pattern);
