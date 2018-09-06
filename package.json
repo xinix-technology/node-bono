@@ -1,7 +1,7 @@
 {
   "name": "bono",
-  "version": "0.3.6",
-  "description": "Bono javascript web framework on top of node.js",
+  "version": "1.0.0",
+  "description": "Bono is light and modular Node.js web application framework",
   "main": "index.js",
   "scripts": {
     "test": "mocha --recursive",
