@@ -19,13 +19,13 @@ describe('Route bundle', () => {
     let resp;
 
     resp = await test(app.callback()).get('/foo').expect(200);
-    assert.equal(resp.text, 'foo root');
+    assert.strictEqual(resp.text, 'foo root');
 
     resp = await test(app.callback()).get('/bar').expect(200);
-    assert.equal(resp.text, 'bar root');
+    assert.strictEqual(resp.text, 'bar root');
 
     resp = await test(app.callback()).get('/foo/other').expect(200);
-    assert.equal(resp.text, 'foo other');
+    assert.strictEqual(resp.text, 'foo other');
 
     await test(app.callback()).get('/fooz').expect(404);
   });
@@ -46,13 +46,13 @@ describe('Route bundle', () => {
     let resp;
 
     resp = await test(app.callback()).get('/1/foo').expect(200);
-    assert.equal(resp.text, 'foo root');
+    assert.strictEqual(resp.text, 'foo root');
 
     resp = await test(app.callback()).get('/2/bar').expect(200);
-    assert.equal(resp.text, 'bar root');
+    assert.strictEqual(resp.text, 'bar root');
 
     resp = await test(app.callback()).get('/3/foo/other').expect(200);
-    assert.equal(resp.text, 'foo other');
+    assert.strictEqual(resp.text, 'foo other');
 
     await test(app.callback()).get('/4/fooz').expect(404);
   });

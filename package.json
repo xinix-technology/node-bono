@@ -16,17 +16,17 @@
     "koa-compose": "^4.1.0"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.6",
-    "eslint": "^5.2.0",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-config-xinix": "^1.1.0",
-    "eslint-plugin-import": "^2.13.0",
+    "babel-eslint": "^9.0.0",
+    "eslint": "^5.5.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-config-xinix": "^1.1.2",
+    "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
+    "eslint-plugin-promise": "^4.0.0",
+    "eslint-plugin-standard": "^4.0.0",
     "mocha": "^5.2.0",
-    "nyc": "^12.0.2",
-    "supertest": "^3.1.0"
+    "nyc": "^13.0.1",
+    "supertest": "^3.2.0"
   },
   "repository": {
     "type": "git",

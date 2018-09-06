@@ -13,14 +13,14 @@ describe('Encoded route params', () => {
 
     {
       let { text } = await test(bundle.callback()).get('/foo').expect(200);
-      assert.equal(argCalled, 'foo');
-      assert.equal(text, 'foo');
+      assert.strictEqual(argCalled, 'foo');
+      assert.strictEqual(text, 'foo');
     }
 
     {
       let { text } = await test(bundle.callback()).get('/foo bar').expect(200);
-      assert.equal(argCalled, 'foo bar');
-      assert.equal(text, 'foo bar');
+      assert.strictEqual(argCalled, 'foo bar');
+      assert.strictEqual(text, 'foo bar');
     }
   });
 });

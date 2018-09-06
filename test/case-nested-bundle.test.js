@@ -21,16 +21,16 @@ describe('Nested bundle', () => {
 
     {
       let { text } = await test(parent.callback()).get('/child');
-      assert.equal(methodCalled, 'GET');
-      assert.equal(pathCalled, '/');
-      assert.equal(text, 'root');
+      assert.strictEqual(methodCalled, 'GET');
+      assert.strictEqual(pathCalled, '/');
+      assert.strictEqual(text, 'root');
     }
 
     {
       let { text } = await test(parent.callback()).get('/child/foo');
-      assert.equal(methodCalled, 'GET');
-      assert.equal(pathCalled, '/foo');
-      assert.equal(text, 'foo');
+      assert.strictEqual(methodCalled, 'GET');
+      assert.strictEqual(pathCalled, '/foo');
+      assert.strictEqual(text, 'foo');
     }
   });
 
@@ -52,16 +52,16 @@ describe('Nested bundle', () => {
 
     {
       let { text } = await test(parent.callback()).get('/');
-      assert.equal(methodCalled, 'GET');
-      assert.equal(pathCalled, '/');
-      assert.equal(text, 'root');
+      assert.strictEqual(methodCalled, 'GET');
+      assert.strictEqual(pathCalled, '/');
+      assert.strictEqual(text, 'root');
     }
 
     {
       let { text } = await test(parent.callback()).get('/foo');
-      assert.equal(methodCalled, 'GET');
-      assert.equal(pathCalled, '/foo');
-      assert.equal(text, 'foo');
+      assert.strictEqual(methodCalled, 'GET');
+      assert.strictEqual(pathCalled, '/foo');
+      assert.strictEqual(text, 'foo');
     }
   });
 
@@ -85,18 +85,18 @@ describe('Nested bundle', () => {
 
     {
       let { text } = await test(parent.callback()).get('/arg1');
-      assert.equal(methodCalled, 'GET');
-      assert.equal(pathCalled, '/');
-      assert.equal(text, 'root');
-      assert.equal(parametersCalled.arg, 'arg1');
+      assert.strictEqual(methodCalled, 'GET');
+      assert.strictEqual(pathCalled, '/');
+      assert.strictEqual(text, 'root');
+      assert.strictEqual(parametersCalled.arg, 'arg1');
     }
 
     {
       let { text } = await test(parent.callback()).get('/arg2/foo');
-      assert.equal(methodCalled, 'GET');
-      assert.equal(pathCalled, '/foo');
-      assert.equal(text, 'foo');
-      assert.equal(parametersCalled.arg, 'arg2');
+      assert.strictEqual(methodCalled, 'GET');
+      assert.strictEqual(pathCalled, '/foo');
+      assert.strictEqual(text, 'foo');
+      assert.strictEqual(parametersCalled.arg, 'arg2');
     }
   });
 });
