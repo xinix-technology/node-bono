@@ -1,22 +1,24 @@
 # Bono (node-bono)
 
+[![npm version](https://badge.fury.io/js/bono.svg)](https://badge.fury.io/js/bono)
+[![GitHub license](https://img.shields.io/github/license/xinix-technology/node-bono.svg)](https://github.com/xinix-technology/node-bono/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/xinix-technology/node-bono.svg?branch=master)](https://travis-ci.org/xinix-technology/node-bono)
+
 ```sh
-npm install xinix-technology/node-bono#next --save
+npm i bono --save
 ```
 
 Bono is light and modular Node.js web application framework (based on Koa.js) to develop api and website.
 
 ## Getting Started
 
-Assuming you already installed Node.js, create directory to hold your application.
-Move to that directory and start initialize npm project on that directory.
-Install bono as dependency.
+Assuming you already installed Node.js, create directory to hold your application. Move to that directory and start initialize npm project on that directory. Then, install bono as dependency.
 
 ```sh
 mkdir my-project
 cd my-project
 npm init
-npm install bono --save
+npm i bono --save
 ```
 
 Write code below as `app.js`
@@ -58,7 +60,7 @@ const http = require('http');
 const Bundle = require('bono');
 
 const auth = new Bundle();
-app.post('/login', async ctx => {
+auth.post('/login', async ctx => {
   let { username, password } = await ctx.parse();
 
   ctx.assert(username === 'foo' && password === 'bar', 401, 'Login failed!');
@@ -127,7 +129,7 @@ Middleware cascade in a more traditional way as you may be used to with similar 
 
 Middleware definition takes the following structure:
 
-```
+```js
 bundle.use(MIDDLEWARE)
 ```
 
@@ -198,13 +200,14 @@ Each route can have one or more handler functions, which are executed when the r
 
 Route definition takes the following structure:
 
-```
+```js
 bundle.METHOD(PATH, HANDLER)
 ```
 
 Where:
 
-bundle is an instance of Bono bundle.
+Bundle is an instance of Bono bundle.
+
 - METHOD is an HTTP request method, in lowercase.
 - PATH is a path on the server.
 - HANDLER is the function executed when the route is matched.
