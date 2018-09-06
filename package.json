@@ -16,7 +16,7 @@
     "koa-compose": "^4.1.0"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=8"
   },
   "devDependencies": {
     "babel-eslint": "^9.0.0",
