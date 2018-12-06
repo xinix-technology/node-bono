@@ -3,10 +3,13 @@ const Router = require('./router');
 const Bundler = require('./bundler');
 const compose = require('koa-compose');
 const parse = require('co-body');
+const koaQs = require('koa-qs');
 
 class Bundle extends Koa {
   constructor () {
     super();
+
+    koaQs(this);
 
     this.router = new Router();
     this.bundler = new Bundler();
