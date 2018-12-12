@@ -106,6 +106,8 @@ class Bundle extends Koa {
 function bundleMiddleware (bundle) {
   const { bundler, router } = bundle;
   return async (ctx, next) => {
+    ctx.state.bundle = bundle;
+
     const delegated = await bundler.delegate(ctx);
     if (!delegated) {
       await router.delegate(ctx);

@@ -1,6 +1,6 @@
 {
   "name": "bono",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Bono is light and modular Node.js web application framework",
   "main": "index.js",
   "scripts": {

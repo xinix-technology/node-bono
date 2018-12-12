@@ -70,18 +70,38 @@ describe('Nested bundle', () => {
     let methodCalled;
     let pathCalled;
     let parametersCalled;
+    let bundleState;
+
     child.use(async (ctx, next) => {
       methodCalled = ctx.method;
       pathCalled = ctx.path;
       parametersCalled = ctx.parameters;
       await next();
     });
-    child.get('/', () => 'root');
-    child.get('/foo', () => 'foo');
+
+    child.get('/', ctx => {
+      bundleState = ctx.state.bundle;
+      return 'root';
+    });
+
+    child.get('/foo', ctx => {
+      bundleState = ctx.state.bundle;
+      return 'foo';
+    });
 
     let parent = new Bundle();
     parent.use(require('../middlewares/json')());
     parent.bundle('/{arg}', child);
+    parent.get('/', ctx => {
+      bundleState = ctx.state.bundle;
+      return 'parent-root';
+    });
+
+    {
+      let { text } = await test(parent.callback()).get('/');
+      assert.strictEqual(text, 'parent-root');
+      assert.strictEqual(bundleState, parent);
+    }
 
     {
       let { text } = await test(parent.callback()).get('/arg1');
@@ -89,6 +109,7 @@ describe('Nested bundle', () => {
       assert.strictEqual(pathCalled, '/');
       assert.strictEqual(text, 'root');
       assert.strictEqual(parametersCalled.arg, 'arg1');
+      assert.strictEqual(bundleState, child);
     }
 
     {
@@ -97,6 +118,7 @@ describe('Nested bundle', () => {
       assert.strictEqual(pathCalled, '/foo');
       assert.strictEqual(text, 'foo');
       assert.strictEqual(parametersCalled.arg, 'arg2');
+      assert.strictEqual(bundleState, child);
     }
   });
 });
