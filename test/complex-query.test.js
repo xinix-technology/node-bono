@@ -3,8 +3,8 @@ const test = require('supertest');
 const assert = require('assert');
 
 describe('complex query', () => {
-  it('process object, array, and plain', async () => {
-    let bundle = new Bundle();
+  it.only('process object, array, and plain', async () => {
+    const bundle = new Bundle();
 
     bundle.get('/', ctx => {
       assert.strictEqual(ctx.query.obj.one, '1');

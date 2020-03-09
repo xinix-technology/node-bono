@@ -3,23 +3,22 @@ const Router = require('./router');
 const Bundler = require('./bundler');
 const compose = require('koa-compose');
 const parse = require('co-body');
-const koaQs = require('koa-qs');
+const qs = require('qs');
 
 class Bundle extends Koa {
   constructor () {
     super();
-
-    koaQs(this);
 
     this.router = new Router();
     this.bundler = new Bundler();
   }
 
   createContext (req, res) {
-    let ctx = super.createContext(req, res);
+    const ctx = super.createContext(req, res);
 
     Object.assign(ctx, {
       parameters: {},
+
       async parse (type) {
         if ('_parsedBody' in this.request) {
           return this.request._parsedBody;
@@ -41,6 +40,22 @@ class Bundle extends Koa {
             throw err;
           }
         }
+      },
+    });
+
+    Object.defineProperty(ctx.request, 'query', {
+      get () {
+        const str = this.querystring;
+        if (!str) return {};
+        const c = this._querycache = this._querycache || {};
+        if (!c[str]) {
+          c[str] = qs.parse(str);
+        }
+        return c[str];
+      },
+
+      set (obj) {
+        this.querystring = qs.stringify(obj);
       },
     });
 

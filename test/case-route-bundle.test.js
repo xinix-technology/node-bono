@@ -4,13 +4,13 @@ const assert = require('assert');
 
 describe('Route bundle', () => {
   it('route to destined static bundle', async () => {
-    let app = new Bundle();
+    const app = new Bundle();
 
-    let foo = new Bundle();
+    const foo = new Bundle();
     foo.get('/', ctx => { ctx.body = 'foo root'; });
     foo.get('/other', ctx => { ctx.body = 'foo other'; });
 
-    let bar = new Bundle();
+    const bar = new Bundle();
     bar.get('/', ctx => { ctx.body = 'bar root'; });
 
     app.bundle('/foo', foo);
@@ -31,13 +31,13 @@ describe('Route bundle', () => {
   });
 
   it('route to destined pattern bundle', async () => {
-    let app = new Bundle();
+    const app = new Bundle();
 
-    let foo = new Bundle();
+    const foo = new Bundle();
     foo.get('/', ctx => { ctx.body = 'foo root'; });
     foo.get('/other', ctx => { ctx.body = 'foo other'; });
 
-    let bar = new Bundle();
+    const bar = new Bundle();
     bar.get('/', ctx => { ctx.body = 'bar root'; });
 
     app.bundle('/{id}/foo', foo);

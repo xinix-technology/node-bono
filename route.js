@@ -1,17 +1,17 @@
 class Route {
   static parse (str) {
-    let chunks = str.split('[');
+    const chunks = str.split('[');
 
     if (chunks.length > 2) {
       throw new Error('Invalid use of optional params');
     }
 
-    let [ chunk, restChunk ] = chunks;
-    let tokens = [];
+    const [chunk, restChunk] = chunks;
+    const tokens = [];
 
-    let re = chunk.replace(/{([^}]+)}/g, function (g, token, i) {
+    const re = chunk.replace(/{([^}]+)}/g, function (g, token, i) {
       while (i >= 0) {
-        let current = chunk[i];
+        const current = chunk[i];
         if (current === '}') {
           break;
         }
@@ -37,7 +37,7 @@ class Route {
         return '([^/]+)';
       }).replace(/\//g, '\\/') + ')?';
     }
-    return [ new RegExp('^' + re + optRe + '$'), tokens ];
+    return [new RegExp('^' + re + optRe + '$'), tokens];
   }
 
   static isStatic (uri) {
@@ -49,7 +49,7 @@ class Route {
     this.callback = callback;
     this.isStatic = Route.isStatic(uri);
     if (!this.isStatic) {
-      [ this.pattern, this.args ] = Route.parse(this.uri);
+      [this.pattern, this.args] = Route.parse(this.uri);
     }
   }
 

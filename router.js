@@ -13,7 +13,7 @@ class Router {
 
   route (methods, uri, callback) {
     if (!Array.isArray(methods)) {
-      methods = [ methods ];
+      methods = [methods];
     }
 
     methods.forEach(method => (this.routes[method].push(new Route(uri, callback))));

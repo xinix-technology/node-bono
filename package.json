@@ -1,6 +1,6 @@
 {
   "name": "bono",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Bono is light and modular Node.js web application framework",
   "main": "index.js",
   "scripts": {
@@ -12,16 +12,25 @@
   "license": "MIT",
   "dependencies": {
     "co-body": "^6.0.0",
-    "koa": "^2.5.2",
+    "koa": "^2.11.0",
     "koa-compose": "^4.1.0",
-    "koa-qs": "^2.0.0"
+    "qs": "^6.9.1"
   },
   "engines": {
     "node": ">=8"
   },
   "devDependencies": {
-    "husky": "^1.2.0",
-    "supertest": "^3.2.0"
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-config-xinix": "^1.1.11",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "husky": "^4.2.3",
+    "mocha": "^7.1.0",
+    "nyc": "^15.0.0",
+    "supertest": "^4.0.2"
   },
   "repository": {
     "type": "git",

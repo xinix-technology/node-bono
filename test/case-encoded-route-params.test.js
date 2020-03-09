@@ -4,7 +4,7 @@ const assert = require('assert');
 
 describe('Encoded route params', () => {
   it('encode route parameters', async () => {
-    let bundle = new Bundle();
+    const bundle = new Bundle();
 
     let argCalled;
     bundle.get('/{arg}', ctx => {
@@ -12,13 +12,13 @@ describe('Encoded route params', () => {
     });
 
     {
-      let { text } = await test(bundle.callback()).get('/foo').expect(200);
+      const { text } = await test(bundle.callback()).get('/foo').expect(200);
       assert.strictEqual(argCalled, 'foo');
       assert.strictEqual(text, 'foo');
     }
 
     {
-      let { text } = await test(bundle.callback()).get('/foo bar').expect(200);
+      const { text } = await test(bundle.callback()).get('/foo bar').expect(200);
       assert.strictEqual(argCalled, 'foo bar');
       assert.strictEqual(text, 'foo bar');
     }
