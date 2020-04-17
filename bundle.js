@@ -5,9 +5,13 @@ const compose = require('koa-compose');
 const parse = require('co-body');
 const qs = require('qs');
 
+const kDownstream = Symbol('downstream');
+
 class Bundle extends Koa {
   constructor () {
     super();
+
+    this.use(bundleMiddleware(this));
 
     this.router = new Router();
     this.bundler = new Bundler();
@@ -62,6 +66,15 @@ class Bundle extends Koa {
     return ctx;
   }
 
+  use (fn) {
+    const lastFn = this.middleware.pop();
+    super.use(fn);
+    if (lastFn) {
+      super.use(lastFn);
+    }
+    return this;
+  }
+
   bundle (uri, bundle) {
     this.bundler.set(uri, bundle);
   }
@@ -90,13 +103,12 @@ class Bundle extends Koa {
     this.router.route(methods, uri, callback);
   }
 
-  finalize () {
-    if (!this._downstream) {
-      this.use(bundleMiddleware(this));
-      this._downstream = compose(this.middleware);
+  getDownstream () {
+    if (!this[kDownstream]) {
+      this[kDownstream] = compose(this.middleware);
     }
 
-    return this._downstream;
+    return this[kDownstream];
   }
 
   async dispatch (matcher, ctx) {
@@ -104,23 +116,18 @@ class Bundle extends Koa {
 
     ctx.path = matcher.shiftPath(ctx);
 
-    const downstream = this.finalize();
+    const downstream = this.getDownstream();
 
     await downstream(ctx);
 
     ctx.path = originalPath;
   }
-
-  callback () {
-    this.finalize();
-
-    return super.callback();
-  }
 }
 
 function bundleMiddleware (bundle) {
-  const { bundler, router } = bundle;
   return async (ctx, next) => {
+    const { bundler, router } = bundle;
+
     ctx.state.bundle = bundle;
 
     const delegated = await bundler.delegate(ctx);

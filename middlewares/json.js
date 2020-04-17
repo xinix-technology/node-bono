@@ -1,5 +1,3 @@
-const log = require('debug')('bono:middlewares:json');
-
 module.exports = ({ debug = false } = {}) => {
   function marshallErr (err) {
     const { message, status } = err;
@@ -30,7 +28,7 @@ module.exports = ({ debug = false } = {}) => {
       ctx.lastError = err;
 
       if (ctx.status >= 500) {
-        log(`Caught error with stack => ${err.stack}`);
+        console.error(`Caught error => ${err.stack}`);
       }
 
       let errors = [];
